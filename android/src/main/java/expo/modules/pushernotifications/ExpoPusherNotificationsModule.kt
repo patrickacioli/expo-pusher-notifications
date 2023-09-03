@@ -1,47 +1,50 @@
 package expo.modules.pushernotifications
 
+import android.content.Context
+import expo.modules.kotlin.Promise
+import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
 class ExpoPusherNotificationsModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+
+  private var pusher: ExpoPusherNotificationsWrapper = ExpoPusherNotificationsWrapper()
+
+  private val context: Context
+    get() = appContext.reactContext ?: throw Exceptions.ReactContextLost()
+
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoPusherNotifications')` in JavaScript.
     Name("ExpoPusherNotifications")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
+    Events("onInterestsChanged")
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
-
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
-    }
-
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
-    }
-
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(ExpoPusherNotificationsView::class) {
-      // Defines a setter for the `name` prop.
-      Prop("name") { view: ExpoPusherNotificationsView, prop: String ->
-        println(prop)
+    AsyncFunction("start") { apiKey: String, promise: Promise ->
+      try {
+        pusher = ExpoPusherNotificationsWrapper()
+        pusher.start(apiKey, context)
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("ERR_PUSH_NOTIFICATIONS_START", "Cannot start pusher ", e)
       }
+    }
+
+    AsyncFunction("addDeviceInterest") { interest: String, promise: Promise ->
+      try {
+        pusher.addDeviceInterest(interest)
+        promise.resolve(interest)
+      } catch (e: Exception) {
+        promise.reject("ERR_PUSH_NOTIFICATIONS_ADD_INTEREST", "Cannot add interests ", e)
+      }
+    }
+
+    AsyncFunction("removeDeviceInterest") { interest: String ->
+      pusher.removeDeviceInterest(interest)
+    }
+
+    AsyncFunction("getDeviceInterests") { pusher.getDeviceInterests() }
+
+    AsyncFunction("setDeviceInterests") { interests: List<String> ->
+      pusher.setDeviceInterests(interests)
     }
   }
 }

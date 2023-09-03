@@ -28,11 +28,13 @@
   "author": "Patrick Acioli <patrickacioli23@gmail.com> (https://github.com/patrickacioli)",
   "license": "MIT",
   "homepage": "https://github.com/patrickacioli/expo-pusher-notifications#readme",
-  "dependencies": {},
+  "dependencies": {
+    "expo": "^49.0.9"
+  },
   "devDependencies": {
     "@types/react": "^18.0.25",
     "expo-module-scripts": "^3.0.11",
-    "expo-modules-core": "^1.5.7"
+    "expo-modules-core": "~1.5.10"
   },
   "peerDependencies": {
     "expo": "*",

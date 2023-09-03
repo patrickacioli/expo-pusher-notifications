@@ -53,14 +53,18 @@ afterEvaluate {
 android {
   compileSdkVersion safeExtGet("compileSdkVersion", 33)
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_11
-    targetCompatibility JavaVersion.VERSION_11
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
+  if (agpVersion.tokenize('.')[0].toInteger() < 8) {
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_11
+      targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+      jvmTarget = JavaVersion.VERSION_11.majorVersion
+    }
   }
 
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_11.majorVersion
-  }
 
   namespace "expo.modules.pushernotifications"
   defaultConfig {
@@ -85,5 +89,8 @@ repositories {
 
 dependencies {
   implementation project(':expo-modules-core')
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${getKotlinVersion()}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10"
+  implementation 'com.google.firebase:firebase-messaging:21.1.0'
+  implementation 'com.pusher:push-notifications-android:1.9.2'
 }
+
