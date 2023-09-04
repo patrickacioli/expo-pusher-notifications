@@ -62,11 +62,19 @@ export const InterestsProvider: React.FC<PropsWithChildren> = ({
   useEffect(() => {
     const subscription =
       ExpoPusherNotifications.setOnDeviceInterestsChangedListener(
-        ({ interest: newInterest }) => {
-          console.log(`New Interest: ${newInterest}`);
+        ({ interests: newInterests }) => {
+          console.log(`From Event:`, newInterests);
         }
       );
+    return () => subscription.remove();
+  }, []);
 
+  useEffect(() => {
+    const subscription = ExpoPusherNotifications.onNotification(
+      ({ notification }) => {
+        console.log(`On Notification:`, notification);
+      }
+    );
     return () => subscription.remove();
   }, []);
 

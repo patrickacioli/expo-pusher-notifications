@@ -17,14 +17,27 @@ async function _wrapper(
   }
 }
 
-export type ThemeChangeEvent = {
-  interest: string;
+export type InterestsChangedEvent = {
+  interests: any;
+};
+
+export type NotificationEvent = {
+  notification: any;
 };
 
 export function setOnDeviceInterestsChangedListener(
-  listener: (event: ThemeChangeEvent) => void
+  listener: (event: InterestsChangedEvent) => void
 ): Subscription {
-  return emitter.addListener<ThemeChangeEvent>("onInterestsChanged", listener);
+  return emitter.addListener<InterestsChangedEvent>(
+    "onInterestsChanged",
+    listener
+  );
+}
+
+export function onNotification(
+  listener: (event: NotificationEvent) => void
+): Subscription {
+  return emitter.addListener<NotificationEvent>("notification", listener);
 }
 
 export async function start(
