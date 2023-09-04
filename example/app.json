@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "expo.modules.pushernotifications.example"
@@ -23,10 +21,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "expo.modules.pushernotifications.example"
+      "package": "expo.modules.pushernotifications.example",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": ["../app.plugin.js"],
+    "extra": {
+      "eas": {
+        "projectId": "93fbfd8c-0f25-4674-9b33-a6511628b960"
+      }
+    },
+    "owner": "sports-at"
   }
 }

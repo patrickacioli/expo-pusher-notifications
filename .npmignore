@@ -9,3 +9,8 @@ __tests__
 /android/src/test/
 /android/build/
 /example/
+
+
+# Expo
+plugin/src
+plugin/tsconfig.json
