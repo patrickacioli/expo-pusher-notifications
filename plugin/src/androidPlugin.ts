@@ -17,6 +17,7 @@ const applyGoogleServicesClassPath = (buildGradle: string) => {
   );
 };
 const applyPusherDepsToApp = (buildGradle: string) => {
+  const firebaseIid = `implementation("com.google.firebase:firebase-iid:21.1.0")`;
   const firebaseMessaging = `implementation('com.google.firebase:firebase-messaging:21.1.0')`;
   const pusherLib = `implementation('com.pusher:push-notifications-android:1.9.0')`;
   const reactLib = `implementation('com.facebook.react:react-android')`;
@@ -28,7 +29,7 @@ const applyPusherDepsToApp = (buildGradle: string) => {
 
   return buildGradle.replace(
     depsRegex,
-    `${reactLib}\r\n\t${firebaseMessaging}\r\n\t${pusherLib}\r\n`
+    `${reactLib}\r\n\t${firebaseIid}\r\n\t${firebaseMessaging}\r\n\t${pusherLib}\r\n`
   );
 };
 
@@ -45,7 +46,7 @@ export const androidPlugin: ConfigPlugin = (config) => {
   config = withProjectBuildGradle(config, ({ modResults, ...subConfig }) => {
     if (modResults.language !== "groovy") {
       WarningAggregator.addWarningAndroid(
-        "withBackgroundGeolocation",
+        "withPusherConfig",
         `Cannot automatically configure project build.gradle if it's not groovy`
       );
       return { modResults, ...subConfig };
@@ -53,7 +54,7 @@ export const androidPlugin: ConfigPlugin = (config) => {
 
     if (!subConfig.android?.googleServicesFile) {
       WarningAggregator.addWarningAndroid(
-        "withBackgroundGeolocation",
+        "withPusherConfig",
         `Cannot automatically configure project build.gradle if no googleServicesFile provided.`
       );
       return { modResults, ...subConfig };
@@ -71,7 +72,7 @@ export const androidPlugin: ConfigPlugin = (config) => {
   config = withAppBuildGradle(config, ({ modResults, ...subConfig }) => {
     if (modResults.language !== "groovy") {
       WarningAggregator.addWarningAndroid(
-        "withBackgroundGeolocation",
+        "withPusherConfig",
         `Cannot automatically configure project build.gradle if it's not groovy`
       );
       return { modResults, ...subConfig };

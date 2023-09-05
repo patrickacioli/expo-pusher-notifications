@@ -24,11 +24,13 @@ export const InterestsProvider: React.FC<PropsWithChildren> = ({
 }) => {
   const [interests, setInterests] = useState<string[]>([]);
 
-  const getInterests = useCallback(() => {}, [
+  const getInterests = useCallback(() => {
+    console.log(`getInterests`);
+
     ExpoPusherNotifications.getDeviceInterests().then((interests) => {
       setInterests(interests);
-    }),
-  ]);
+    });
+  }, []);
 
   const addInterest = useCallback(
     (interest: string) => {
@@ -50,12 +52,15 @@ export const InterestsProvider: React.FC<PropsWithChildren> = ({
   );
 
   useEffect(() => {
+    console.log(`start`);
     ExpoPusherNotifications.start(
       "b857d876-be95-4bb2-941f-93a122ab39aa",
       () => {
-        console.log(`Connected to Pusher`);
+        console.log(`Connected to Pusher from effect`);
       }
-    );
+    ).then(() => {
+      console.log(`algo`);
+    });
     getInterests();
   }, []);
 

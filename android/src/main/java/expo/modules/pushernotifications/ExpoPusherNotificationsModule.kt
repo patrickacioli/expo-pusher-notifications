@@ -24,10 +24,13 @@ class ExpoPusherNotificationsModule : Module() {
 
     AsyncFunction("start") { apiKey: String, promise: Promise ->
       try {
+        Log.i("MainActivity", "TENTOU CONNECTAR NO PUSHER")
         pusher = ExpoPusherNotificationsWrapper()
         pusher.start(apiKey, context, this@ExpoPusherNotificationsModule::handleInterestsChange)
         promise.resolve(null)
+        Log.i("MainActivity", "CONNECTOU PUSHER")
       } catch (e: Exception) {
+        Log.i("MainActivity", e.toString())
         promise.reject("ERR_PUSH_NOTIFICATIONS_START", "Cannot start pusher ", e)
       }
     }

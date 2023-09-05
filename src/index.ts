@@ -10,9 +10,14 @@ async function _wrapper(
 ) {
   try {
     const result = await method();
+    console.log(`result`, result);
     successCallback(result);
     return result;
   } catch (error) {
+    console.error(
+      `PusherNotifications: ${error.message}`,
+      JSON.stringify(console.error())
+    );
     errorCallback(error);
   }
 }

@@ -40,7 +40,7 @@ class ExpoPusherNotificationsWrapper {
   }
   fun onReceiveActivity(activity: Activity?, callBack: (remoteMessage: RemoteMessage) -> Unit) {
     if (activity == null) {
-        Log.i("MainActivity", "Veio nulo")
+      Log.i("MainActivity", "Veio nulo")
       return
     }
     PushNotifications.setOnMessageReceivedListenerForVisibleActivity(
@@ -48,7 +48,7 @@ class ExpoPusherNotificationsWrapper {
         object : PushNotificationReceivedListener {
           override fun onMessageReceived(remoteMessage: RemoteMessage) {
             Log.i("MainActivity", "Remote message received while this activity is visible!")
-              callBack(remoteMessage)
+            callBack(remoteMessage)
           }
         }
     )
