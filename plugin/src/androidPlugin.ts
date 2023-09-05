@@ -60,9 +60,6 @@ export const androidPlugin: ConfigPlugin = (config) => {
       return { modResults, ...subConfig };
     }
 
-    // Apply Google Services plugin
-    modResults.contents = applyGoogleServicesPlugin(modResults.contents);
-
     return {
       modResults,
       ...subConfig,
