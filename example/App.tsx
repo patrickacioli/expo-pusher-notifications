@@ -9,37 +9,41 @@ import {
   View,
 } from "react-native";
 
-import * as ExpoPusherNotifications from "expo-pusher-notifications";
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { InterestsList } from "./components/InterestsList";
 import { AddInterest } from "./components/AddInterest";
 import { ClearAll } from "./components/ClearAll";
 import { InterestsProvider, useInterests } from "./components/InterestsContext";
 
-export default function App() {
+function Wrapper() {
   const { interests } = useInterests();
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Pusher Example App</Text>
 
-      <InterestsProvider>
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          style={{
-            width: "100%",
-          }}
-        >
-          <View style={styles.interestsWrapper}>
-            <InterestsList />
-          </View>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={{
+          width: "100%",
+        }}
+      >
+        <View style={styles.interestsWrapper}>
+          <InterestsList />
+        </View>
 
-          {interests?.length > 0 && <ClearAll />}
-        </ScrollView>
+        {interests?.length > 0 && <ClearAll />}
+      </ScrollView>
 
-        <AddInterest />
-      </InterestsProvider>
+      <AddInterest />
     </SafeAreaView>
+  );
+}
+
+export default function App() {
+  return (
+    <InterestsProvider>
+      <Wrapper />
+    </InterestsProvider>
   );
 }
 

@@ -1,9 +1,11 @@
 {
-  "platforms": ["ios", "android", "web"],
+  "platforms": ["ios", "android"],
   "ios": {
     "modules": ["ExpoPusherNotificationsModule"]
   },
   "android": {
-    "modules": ["expo.modules.pushernotifications.ExpoPusherNotificationsModule"]
+    "modules": [
+      "expo.modules.pushernotifications.ExpoPusherNotificationsModule"
+    ]
   }
 }

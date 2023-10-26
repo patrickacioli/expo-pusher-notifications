@@ -1,4 +1,5 @@
 import { EventEmitter, Subscription } from "expo-modules-core";
+import { InterestsChangedEvent, NotificationEvent } from "./types";
 import ExpoPusherNotificationsModule from "./ExpoPusherNotificationsModule";
 
 const emitter = new EventEmitter(ExpoPusherNotificationsModule);
@@ -10,25 +11,12 @@ async function _wrapper(
 ) {
   try {
     const result = await method();
-    console.log(`result`, result);
     successCallback(result);
     return result;
   } catch (error) {
-    console.error(
-      `PusherNotifications: ${error.message}`,
-      JSON.stringify(console.error())
-    );
     errorCallback(error);
   }
 }
-
-export type InterestsChangedEvent = {
-  interests: any;
-};
-
-export type NotificationEvent = {
-  notification: any;
-};
 
 export function setOnDeviceInterestsChangedListener(
   listener: (event: InterestsChangedEvent) => void
