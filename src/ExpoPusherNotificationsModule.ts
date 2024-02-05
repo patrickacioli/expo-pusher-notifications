@@ -1,4 +1,4 @@
-import { Platform, requireNativeModule } from "expo-modules-core";
+import { requireNativeModule } from "expo-modules-core";
 import { RNExpoPusherModule } from "./types";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
@@ -23,6 +23,14 @@ let defaultImplementation = {
     if (!warningHasBeenShown) {
       console.info(
         `[react-native-expo-pusher-notifications] Starting the module will not working on Expo GO environment. `
+      );
+      warningHasBeenShown = true;
+    }
+  },
+  setInstanceId: (apiKey) => {
+    if (!warningHasBeenShown) {
+      console.info(
+        `[react-native-expo-pusher-notifications] Setting the instance ID will not working on Expo GO environment. `
       );
       warningHasBeenShown = true;
     }

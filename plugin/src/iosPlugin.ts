@@ -1,6 +1,12 @@
-import { ConfigPlugin, withPodfileProperties } from "expo/config-plugins";
+import {
+  ConfigPlugin,
+  withInfoPlist,
+  withPodfileProperties,
+} from "expo/config-plugins";
 
-export const iosPlugin: ConfigPlugin = (config) => {
+export const iosPlugin: ConfigPlugin<{
+  pusherInstanceId: string;
+}> = (config, { pusherInstanceId }) => {
   config = withPodfileProperties(config, ({ modResults, ...subConfig }) => {
     modResults = {
       ...modResults,
@@ -10,6 +16,11 @@ export const iosPlugin: ConfigPlugin = (config) => {
       modResults,
       ...subConfig,
     };
+  });
+
+  config = withInfoPlist(config, (config) => {
+    config.modResults["PUSHER_INSTANCE_ID"] = pusherInstanceId;
+    return config;
   });
 
   return config;

@@ -10,7 +10,8 @@ export type NotificationEvent = {
 };
 export interface RNExpoPusherModule extends ProxyNativeModule {
   addDeviceInterest(interest: string): Promise<void>;
-  start(apiKey: string): Promise<void>;
+  start(): Promise<void>;
+  setInstanceId(apiKey: string): void;
   getDeviceInterests(): Promise<string[]>;
   removeDeviceInterest(interest: string): Promise<void>;
   setDeviceInterests(interests: string[]): Promise<void>;

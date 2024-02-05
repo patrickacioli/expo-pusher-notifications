@@ -16,7 +16,7 @@ export const AddInterest = ({}) => {
 
   const handleAdd = () => {
     if (!_.isEmpty(interestToAdd)) {
-      addInterest(interestToAdd);
+      addInterest(interestToAdd.toLocaleLowerCase());
       setInterestToAdd("");
     }
   };

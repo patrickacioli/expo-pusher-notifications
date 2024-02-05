@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+ExpoPusherNotifications.setInstanceId("b857d876-be95-4bb2-941f-93a122ab39aa");
+
 type InterestsContextType = {
   interests: string[];
   addInterest: (interest: string) => void;
@@ -25,10 +27,9 @@ export const InterestsProvider: React.FC<PropsWithChildren> = ({
   const [interests, setInterests] = useState<string[]>([]);
 
   const getInterests = useCallback(() => {
-    console.log(`getInterests`);
-
-    ExpoPusherNotifications.getDeviceInterests().then((interests) => {
-      setInterests(interests);
+    ExpoPusherNotifications.getDeviceInterests().then((newInterests) => {
+      console.log(`Device interests:`, newInterests);
+      setInterests(newInterests);
     });
   }, []);
 
@@ -42,45 +43,36 @@ export const InterestsProvider: React.FC<PropsWithChildren> = ({
     [getInterests]
   );
 
-  const removeInterest = useCallback(
-    (interest: string) => {
-      ExpoPusherNotifications.removeDeviceInterest(interest).then(() => {
-        console.log(`Removed interest with id: ${interest}`);
-      });
-    },
-    [getInterests]
-  );
-
-  useEffect(() => {
-    console.log(`start`);
-    ExpoPusherNotifications.start(
-      "b857d876-be95-4bb2-941f-93a122ab39aa",
-      () => {
-        console.log(`Connected to Pusher from effect`);
-      }
-    ).then(() => {
-      console.log(`algo`);
+  const removeInterest = useCallback((interest: string) => {
+    ExpoPusherNotifications.removeDeviceInterest(interest).then(() => {
+      console.log(`Removed interest with id: ${interest}`);
+      getInterests();
     });
-    getInterests();
   }, []);
 
   useEffect(() => {
-    const subscription =
-      ExpoPusherNotifications.setOnDeviceInterestsChangedListener(
-        ({ interests: newInterests }) => {
-          console.log(`From Event:`, newInterests);
-        }
-      );
-    return () => subscription.remove();
-  }, []);
-
-  useEffect(() => {
-    const subscription = ExpoPusherNotifications.onNotification(
+    ExpoPusherNotifications.start(() => {
+      console.log(`Pusher Notifications started`);
+      getInterests();
+    });
+    const onNotificationSubscription = ExpoPusherNotifications.onNotification(
       ({ notification }) => {
         console.log(`On Notification:`, notification);
       }
     );
-    return () => subscription.remove();
+    const onEventSubscription =
+      ExpoPusherNotifications.setOnDeviceInterestsChangedListener(
+        ({ interests: newInterests }) => {
+          console.log(
+            `Received new event (setOnDeviceInterestsChangedListener):`,
+            newInterests
+          );
+        }
+      );
+    return () => {
+      onNotificationSubscription.remove();
+      onEventSubscription.remove();
+    };
   }, []);
 
   return (

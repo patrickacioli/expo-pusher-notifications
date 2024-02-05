@@ -34,12 +34,11 @@ export function onNotification(
 }
 
 export async function start(
-  apiKey: string,
   successCallback: () => void = () => {},
   errorCallback: (error: any) => void = () => {}
 ): Promise<void> {
   return _wrapper(
-    () => ExpoPusherNotificationsModule.start(apiKey),
+    () => ExpoPusherNotificationsModule.start(),
     successCallback,
     errorCallback
   );
@@ -75,4 +74,8 @@ export async function setDeviceInterests(interests: string[]): Promise<void> {
 
 export async function clearDeviceInterests(): Promise<void> {
   return _wrapper(() => ExpoPusherNotificationsModule.clearDeviceInterests());
+}
+
+export function setInstanceId(apiKey: string): void {
+  ExpoPusherNotificationsModule.setInstanceId(apiKey);
 }

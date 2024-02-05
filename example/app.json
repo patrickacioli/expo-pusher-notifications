@@ -27,7 +27,12 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["../app.plugin.js"],
+    "plugins": [
+      [
+        "../app.plugin.js",
+        { "pusherInstanceId": "b857d876-be95-4bb2-941f-93a122ab39aa" }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "93fbfd8c-0f25-4674-9b33-a6511628b960"

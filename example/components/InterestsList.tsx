@@ -1,14 +1,7 @@
-import React, { useCallback, useMemo } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { Interest } from "./Interest";
 
-import * as ExpoPusherNotifications from "expo-pusher-notifications";
 import { useInterests } from "./InterestsContext";
 
 export const InterestsList = () => {

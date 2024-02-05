@@ -17,20 +17,27 @@ class ExpoPusherNotificationsModule : Module() {
   private val context: Context
     get() = appContext.reactContext ?: throw Exceptions.ReactContextLost()
 
+
+  private var instanceId: String? = null;
+
   override fun definition() = ModuleDefinition {
     Name("ExpoPusherNotifications")
 
     Events("onInterestsChanged", "notification")
 
-    AsyncFunction("start") { apiKey: String, promise: Promise ->
+    Function("setInstanceId") {apiKey: String ->
+      this@ExpoPusherNotificationsModule.instanceId = apiKey;
+    }
+
+    AsyncFunction("start") {promise: Promise ->
       try {
-        Log.i("MainActivity", "TENTOU CONNECTAR NO PUSHER")
         pusher = ExpoPusherNotificationsWrapper()
-        pusher.start(apiKey, context, this@ExpoPusherNotificationsModule::handleInterestsChange)
+      if (this@ExpoPusherNotificationsModule.instanceId === null) {
+        throw Exception("You must set the instanceId before starting the pusher")
+      }
+        pusher.start(this@ExpoPusherNotificationsModule.instanceId!!, context, this@ExpoPusherNotificationsModule::handleInterestsChange)
         promise.resolve(null)
-        Log.i("MainActivity", "CONNECTOU PUSHER")
       } catch (e: Exception) {
-        Log.i("MainActivity", e.toString())
         promise.reject("ERR_PUSH_NOTIFICATIONS_START", "Cannot start pusher ", e)
       }
     }

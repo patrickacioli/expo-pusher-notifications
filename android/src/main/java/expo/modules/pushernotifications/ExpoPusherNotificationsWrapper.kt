@@ -35,9 +35,11 @@ class ExpoPusherNotificationsWrapper {
   fun removeDeviceInterest(interest: String) {
     PushNotifications.removeDeviceInterest(interest)
   }
+  
   fun setDeviceInterests(interests: List<String>) {
     PushNotifications.setDeviceInterests(interests.toMutableSet())
   }
+
   fun onReceiveActivity(activity: Activity?, callBack: (remoteMessage: RemoteMessage) -> Unit) {
     if (activity == null) {
       Log.i("MainActivity", "Veio nulo")
