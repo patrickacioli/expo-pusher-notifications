@@ -1,5 +1,5 @@
 package expo.modules.pushernotifications
-
+import android.content.pm.PackageManager
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +17,6 @@ class ExpoPusherNotificationsModule : Module() {
   private val context: Context
     get() = appContext.reactContext ?: throw Exceptions.ReactContextLost()
 
-
   private var instanceId: String? = null;
 
   override fun definition() = ModuleDefinition {
@@ -25,17 +24,18 @@ class ExpoPusherNotificationsModule : Module() {
 
     Events("onInterestsChanged", "notification")
 
-    Function("setInstanceId") {apiKey: String ->
-      this@ExpoPusherNotificationsModule.instanceId = apiKey;
-    }
 
     AsyncFunction("start") {promise: Promise ->
       try {
         pusher = ExpoPusherNotificationsWrapper()
-      if (this@ExpoPusherNotificationsModule.instanceId === null) {
-        throw Exception("You must set the instanceId before starting the pusher")
+
+        val applicationInfo = context.packageManager?.getApplicationInfo(context.packageName.toString(), PackageManager.GET_META_DATA)
+        val apiKey = applicationInfo?.metaData?.getString("PUSHER_INSTANCE_ID")
+
+      if (apiKey === null) {
+        throw Exception("You must configure pusherInstanceId on app.json")
       }
-        pusher.start(this@ExpoPusherNotificationsModule.instanceId!!, context, this@ExpoPusherNotificationsModule::handleInterestsChange)
+        pusher.start(apiKey!!, context, this@ExpoPusherNotificationsModule::handleInterestsChange)
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("ERR_PUSH_NOTIFICATIONS_START", "Cannot start pusher ", e)

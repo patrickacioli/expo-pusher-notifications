@@ -39,7 +39,9 @@ const applyGoogleServicesPlugin = (buildGradle: string) => {
   return newBuildGradle;
 };
 
-export const androidPlugin: ConfigPlugin = (config) => {
+export const androidPlugin: ConfigPlugin<{
+  pusherInstanceId: string;
+}> = (config, { pusherInstanceId }) => {
   /**
    * Update project build.gradle
    */
@@ -85,6 +87,14 @@ export const androidPlugin: ConfigPlugin = (config) => {
   });
 
   config = withAndroidManifest(config, ({ modResults, ...subConfig }) => {
+    const mainApplication =
+      AndroidConfig.Manifest.getMainApplicationOrThrow(modResults);
+    AndroidConfig.Manifest.addMetaDataItemToMainApplication(
+      mainApplication,
+      "PUSHER_INSTANCE_ID",
+      pusherInstanceId
+    );
+
     AndroidConfig.Permissions.addPermission(
       modResults,
       "android.permission.POST_NOTIFICATIONS"

@@ -7,7 +7,7 @@ const withPusherConfig: ConfigPlugin<{ pusherInstanceId: string }> = (
   { pusherInstanceId }
 ) => {
   return withPlugins(config, [
-    androidPlugin,
+    [androidPlugin, { pusherInstanceId }],
     [iosPlugin, { pusherInstanceId }],
   ]);
 };

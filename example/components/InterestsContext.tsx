@@ -9,8 +9,6 @@ import {
   useState,
 } from "react";
 
-ExpoPusherNotifications.setInstanceId("b857d876-be95-4bb2-941f-93a122ab39aa");
-
 type InterestsContextType = {
   interests: string[];
   addInterest: (interest: string) => void;
