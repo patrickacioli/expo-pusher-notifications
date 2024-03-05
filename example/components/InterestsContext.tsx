@@ -67,6 +67,15 @@ export const InterestsProvider: React.FC<PropsWithChildren> = ({
           );
         }
       );
+
+    ExpoPusherNotifications.setUserId("SOME_USER_ID", "TOKEN")
+      .then(() => {
+        console.log(`User id set`);
+      })
+      .catch((error) => {
+        console.log(`Error setting user id:`, error);
+      });
+
     return () => {
       onNotificationSubscription.remove();
       onEventSubscription.remove();

@@ -13,6 +13,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 class ExpoPusherNotificationsModule : Module() {
 
   private var pusher: ExpoPusherNotificationsWrapper = ExpoPusherNotificationsWrapper()
+  private var tokenProvider: ExpoPusherCustomTokenProvider = ExpoPusherCustomTokenProvider()
 
   private val context: Context
     get() = appContext.reactContext ?: throw Exceptions.ReactContextLost()
@@ -24,17 +25,14 @@ class ExpoPusherNotificationsModule : Module() {
 
     Events("onInterestsChanged", "notification")
 
-
     AsyncFunction("start") {promise: Promise ->
       try {
         pusher = ExpoPusherNotificationsWrapper()
-
         val applicationInfo = context.packageManager?.getApplicationInfo(context.packageName.toString(), PackageManager.GET_META_DATA)
         val apiKey = applicationInfo?.metaData?.getString("PUSHER_INSTANCE_ID")
-
-      if (apiKey === null) {
-        throw Exception("You must configure pusherInstanceId on app.json")
-      }
+        if (apiKey === null) {
+          throw Exception("You must configure pusherInstanceId on app.json")
+        }
         pusher.start(apiKey!!, context, this@ExpoPusherNotificationsModule::handleInterestsChange)
         promise.resolve(null)
       } catch (e: Exception) {
@@ -57,8 +55,23 @@ class ExpoPusherNotificationsModule : Module() {
 
     AsyncFunction("getDeviceInterests") { pusher.getDeviceInterests() }
 
+    AsyncFunction("clearAllState") {
+      pusher.clearAllState()
+    }
+
     AsyncFunction("setDeviceInterests") { interests: List<String> ->
       pusher.setDeviceInterests(interests)
+    }
+
+    AsyncFunction("setUserId") { userId: String, token: String, promise: Promise ->
+      try {
+        tokenProvider = ExpoPusherCustomTokenProvider()
+        tokenProvider.setLocalToken(token)
+        pusher.setUserId(userId, tokenProvider)
+        promise.resolve(null)
+      }  catch (e: Exception) {
+        promise.reject("ERR_PUSH_NOTIFICATIONS_SET_USER_ID", "Cannot set user token", e)
+      }
     }
 
     OnActivityEntersForeground {
@@ -70,7 +83,6 @@ class ExpoPusherNotificationsModule : Module() {
   }
 
   private fun handleOnActivity(remoteMessage: RemoteMessage) {
-    Log.i("MainActivity", "${remoteMessage.toString()}")
     val result = mutableMapOf<String, String?>()
     val notification = remoteMessage.notification
     val data = remoteMessage.data
