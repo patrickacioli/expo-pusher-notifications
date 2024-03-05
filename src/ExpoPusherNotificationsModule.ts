@@ -39,6 +39,8 @@ let defaultImplementation = {
   removeDeviceInterest: async () => {},
   setDeviceInterests: async () => {},
   clearDeviceInterests: async () => {},
+  setUserId(userId, token) {},
+  clearAllState: () => {},
 } as RNExpoPusherModule;
 
 if (isExpoGo) {

@@ -1,4 +1,3 @@
-import { EventEmitter, Subscription } from "expo-modules-core";
 import { ProxyNativeModule } from "expo-modules-core";
 
 export type InterestsChangedEvent = {
@@ -16,4 +15,6 @@ export interface RNExpoPusherModule extends ProxyNativeModule {
   removeDeviceInterest(interest: string): Promise<void>;
   setDeviceInterests(interests: string[]): Promise<void>;
   clearDeviceInterests(): Promise<void>;
+  setUserId(userId: string, token: string): void;
+  clearAllState(): void;
 }

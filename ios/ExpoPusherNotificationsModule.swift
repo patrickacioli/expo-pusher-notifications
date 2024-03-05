@@ -4,6 +4,7 @@ import PushNotifications
 public class ExpoPusherNotificationsModule: Module {
     
   let pusherController = PusherController.shared
+
   public required init(appContext: AppContext) {
     super.init(appContext: appContext)
   }
@@ -33,25 +34,33 @@ public class ExpoPusherNotificationsModule: Module {
     }
 
     AsyncFunction("getDeviceInterests") {
-      (promise: Promise) in 
-      let interests = try? self.pusherController.getDeviceInterests()
+      (promise: Promise) in
+      let interests = self.pusherController.getDeviceInterests()
       promise.resolve(interests)
     }
 
 
-      AsyncFunction("setDeviceInterests") { (interests: [String], promise: Promise) in
-          
-          
-          do {
-              try self.pusherController.setDeviceInterests(interests: interests)
-              promise.resolve(true)
-              
-          }
-          
-          catch {
-              promise.reject("PUSHER_ERROR", "Cannot set device interests")
-          }
-      }
+    AsyncFunction("setDeviceInterests") { (interests: [String], promise: Promise) in
+        do {
+            try self.pusherController.setDeviceInterests(interests: interests)
+            promise.resolve(true)
+        }          
+        catch {
+            promise.reject("PUSHER_ERROR", "Cannot set device interests")
+        }
+    }
+
+    AsyncFunction("setUserId") { (userId: String, token: String, promise: Promise) in
+        let tokenProvider = LocalTokenProvider()
+        tokenProvider.setToken(token: token)
+        self.pusherController.setUserId(userId: userId, tokenProvider: tokenProvider)
+        promise.resolve(true)
+    }
+
+    AsyncFunction("clearAllState") { (promise: Promise) in
+        self.pusherController.clearAllState()
+        promise.resolve(true)
+    }
 
     View(ExpoPusherNotificationsView.self) {
       // Defines a setter for the `name` prop.
@@ -63,7 +72,7 @@ public class ExpoPusherNotificationsModule: Module {
 
   public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     print("module will start")
-      return true
+    return true
   }
 
 

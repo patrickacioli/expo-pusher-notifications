@@ -79,3 +79,11 @@ export async function clearDeviceInterests(): Promise<void> {
 export function setInstanceId(apiKey: string): void {
   ExpoPusherNotificationsModule.setInstanceId(apiKey);
 }
+
+export async function setUserId(userId: string, token: string): Promise<void> {
+  ExpoPusherNotificationsModule.setUserId(userId, token);
+}
+
+export async function clearAllState(): Promise<void> {
+  return _wrapper(() => ExpoPusherNotificationsModule.clearAllState());
+}

@@ -7,6 +7,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.pusher.pushnotifications.PushNotificationReceivedListener
 import com.pusher.pushnotifications.PushNotifications
 import com.pusher.pushnotifications.SubscriptionsChangedListener
+import com.pusher.pushnotifications.auth.TokenProvider
 
 class ExpoPusherNotificationsWrapper {
 
@@ -32,18 +33,29 @@ class ExpoPusherNotificationsWrapper {
   fun getDeviceInterests(): Set<String> {
     return PushNotifications.getDeviceInterests()
   }
+
   fun removeDeviceInterest(interest: String) {
     PushNotifications.removeDeviceInterest(interest)
   }
-  
+
   fun setDeviceInterests(interests: List<String>) {
     PushNotifications.setDeviceInterests(interests.toMutableSet())
   }
 
+  fun setUserId(userId: String, tokenProvider: TokenProvider) {
+      PushNotifications.setUserId(
+              userId,
+              tokenProvider,
+      )
+  }
+
+  fun clearAllState() {
+    PushNotifications.clearAllState()
+  }
+
   fun onReceiveActivity(activity: Activity?, callBack: (remoteMessage: RemoteMessage) -> Unit) {
     if (activity == null) {
-      Log.i("MainActivity", "Veio nulo")
-      return
+      return;
     }
     PushNotifications.setOnMessageReceivedListenerForVisibleActivity(
         activity,
